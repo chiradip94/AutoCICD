@@ -1,4 +1,4 @@
-resource "aws_lambda_function" "test_lambda" {
+resource "aws_lambda_function" "this" {
   filename      = var.file_path
   function_name = var.function_name
   role          = var.role_arn

@@ -53,7 +53,13 @@ module "connector_lambda" {
   runtime       = "python3.7"
   function_name = var.connector_lambda_name
   handler       = "repo.main"
-  file_path     = "${abspath(path.module)}/files/repoCreateLambda.zip"
+  file_path    = "${abspath(path.module)}/files/repoCreateLambda.zip"
+}
+
+resource "aws_ssm_parameter" "connector_lambda" {
+  name  = "/devops/lambda/connector/arn"
+  type  = "String"
+  value = module.connector_lambda.arn
 }
 
 module "build_sqs" {
@@ -61,7 +67,19 @@ module "build_sqs" {
   sqs_name = "DevOps-Build"
 }
 
+resource "aws_ssm_parameter" "build_sqs" {
+  name  = "/devops/sqs/build/arn"
+  type  = "String"
+  value = module.build_sqs.arn
+}
+
 module "deploy_sqs" {
   source   = "./modules/sqs"
   sqs_name = "DevOps-Deploy"
+}
+
+resource "aws_ssm_parameter" "deploy_sqs" {
+  name  = "/devops/sqs/deploy/arn"
+  type  = "String"
+  value = module.deploy_sqs.arn
 }

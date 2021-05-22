@@ -1,7 +1,7 @@
 module "product_dynamo" {
   source              = "./modules/dynamoDB"
   name                = "productDB"
-  hash_key            = "RepoName"
+  hash_key            = "AppName"
 }
 
 resource "aws_iam_role" "lambda_code_commit" {
@@ -32,13 +32,19 @@ inline_policy {
 
 data "aws_iam_policy_document" "codeCommit" {
   statement {
-    actions   = ["codecommit:Create*"]
+    actions   = ["codecommit:*"]
     resources = ["*"]
     effect = "Allow"
   }
 
   statement {
     actions   = ["dynamodb:*"]
+    resources = ["*"]
+    effect = "Allow"
+  }
+
+  statement {
+    actions   = ["ssm:*"]
     resources = ["*"]
     effect = "Allow"
   }
