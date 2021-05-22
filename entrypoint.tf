@@ -48,6 +48,16 @@ data "aws_iam_policy_document" "codeCommit" {
     resources = ["*"]
     effect = "Allow"
   }
+
+  statement {
+    actions   = [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ]
+    resources = ["*"]
+    effect = "Allow"
+  }
 }
 
 data "archive_file" "repoCreate" {
