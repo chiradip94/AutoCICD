@@ -20,7 +20,7 @@ def createRepo(appName):
                 'destinationArn': ssm_response['Parameter']['Value'],
                 'branches': [],
                 'events': [
-                    'updateReference','createReference','deleteReference',
+                    'updateReference'
                 ]
             },
         ]

@@ -62,8 +62,8 @@ module "connector_lambda" {
   role_arn      = aws_iam_role.lambda_connector.arn
   runtime       = "python3.7"
   function_name = var.connector_lambda_name
-  handler       = "repo.main"
-  file_path    = "${abspath(path.module)}/files/repoCreateLambda.zip"
+  handler       = "connect.main"
+  file_path    = "${abspath(path.module)}/files/connectorLambda.zip"
 }
 
 resource "aws_ssm_parameter" "connector_lambda" {
@@ -81,6 +81,14 @@ resource "aws_ssm_parameter" "build_sqs" {
   name  = "/devops/sqs/build/arn"
   type  = "String"
   value = module.build_sqs.arn
+}
+
+resource "aws_lambda_permission" "connector_lambda_permission" {
+  statement_id  = "APIinvokeToConnectorLambda"
+  action        = "lambda:InvokeFunction"
+  function_name = var.connector_lambda_name
+  principal     = "codecommit.amazonaws.com"
+  source_arn = "arn:aws:codecommit:${local.region}:${local.account_id}:*"
 }
 
 module "deploy_sqs" {
