@@ -19,12 +19,19 @@ EOF
 
 inline_policy {
     name   = "policy-lambda-connector"
-    policy = data.aws_iam_policy_document.codeCommit.json
+    policy = data.aws_iam_policy_document.connector.json
   }
 
 }
 
 data "aws_iam_policy_document" "connector" {
+
+  statement {
+    actions   = ["codecommit:*"]
+    resources = ["*"]
+    effect = "Allow"
+  }
+
   statement {
     actions   = ["dynamodb:*"]
     resources = ["*"]
@@ -33,6 +40,12 @@ data "aws_iam_policy_document" "connector" {
 
   statement {
     actions   = ["sqs:*"]
+    resources = ["*"]
+    effect = "Allow"
+  }
+
+  statement {
+    actions   = ["ssm:*"]
     resources = ["*"]
     effect = "Allow"
   }
@@ -72,17 +85,6 @@ resource "aws_ssm_parameter" "connector_lambda" {
   value = module.connector_lambda.arn
 }
 
-module "build_sqs" {
-  source   = "./modules/sqs"
-  sqs_name = "DevOps-Build"
-}
-
-resource "aws_ssm_parameter" "build_sqs" {
-  name  = "/devops/sqs/build/arn"
-  type  = "String"
-  value = module.build_sqs.arn
-}
-
 resource "aws_lambda_permission" "connector_lambda_permission" {
   statement_id  = "APIinvokeToConnectorLambda"
   action        = "lambda:InvokeFunction"
@@ -91,13 +93,24 @@ resource "aws_lambda_permission" "connector_lambda_permission" {
   source_arn = "arn:aws:codecommit:${local.region}:${local.account_id}:*"
 }
 
+module "build_sqs" {
+  source   = "./modules/sqs"
+  sqs_name = "DevOps-Build"
+}
+
+resource "aws_ssm_parameter" "build_sqs" {
+  name  = "/devops/sqs/build/url"
+  type  = "String"
+  value = module.build_sqs.url
+}
+
 module "deploy_sqs" {
   source   = "./modules/sqs"
   sqs_name = "DevOps-Deploy"
 }
 
 resource "aws_ssm_parameter" "deploy_sqs" {
-  name  = "/devops/sqs/deploy/arn"
+  name  = "/devops/sqs/deploy/url"
   type  = "String"
-  value = module.deploy_sqs.arn
+  value = module.deploy_sqs.url
 }
