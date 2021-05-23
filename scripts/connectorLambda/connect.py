@@ -55,6 +55,7 @@ def main(event, context):
     data = {
         "CloneUrl" : clone_url,
         "TfScriptUrl" : tfScriptUrl,
+        "AppName" : repo_name,
         "TfBackendBucket" : bucketName,
         "TfBackendBucketPath" : "deploy/"+repo_name
     }

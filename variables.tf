@@ -12,3 +12,18 @@ variable "bucket_name" {
   type    = string
   default = "devops-backend-122334"
 }
+
+variable "vpc_id" {
+  type    = string
+  default = ""
+}
+
+variable "ec2_subnets" {
+  type = list(string)
+  default = []
+}
+
+variable "inbound_cidr" {
+  type = string
+  default = "0.0.0.0/0"
+}
