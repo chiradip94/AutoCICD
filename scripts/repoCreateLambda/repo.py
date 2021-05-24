@@ -28,20 +28,24 @@ def createRepo(appName):
 
     return response
 
-def updateTable(appName, appType):
+def updateTable(appName, appType, handler):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('productDB')
     table.put_item(
         Item= {
             "AppName" : appName,
-            "AppType" : appType
+            "AppType" : appType,
+            "Handler" : handler
         }
     )
 
 def main(event, context):
     try:
+        handler = 'NA'
         appName = event['AppName']
         appType = event['AppType']
+        if appType == 'lambda' :
+            handler = event['Handler']
     except:
         putput = {
             'UserMessage' : "Required keys are not passed.",
@@ -64,7 +68,7 @@ def main(event, context):
 
     try:
         repoUrl = response['repositoryMetadata']['cloneUrlHttp']
-        updateTable(appName, appType)
+        updateTable(appName, appType, handler)
     except:
         client = boto3.client('codecommit')
         client.delete_repository(
