@@ -79,7 +79,7 @@ resource "aws_launch_configuration" "this" {
   key_name         = var.key_name
   security_groups  = [aws_security_group.this.id]
   instance_type    = var.instance_type
-  user_data        = "${file(var.userdata_file)}"
+  user_data        = var.userdata
   iam_instance_profile = aws_iam_instance_profile.this.name
 }
 

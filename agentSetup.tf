@@ -22,5 +22,5 @@ module "build_asg" {
   ec2_subnets   = var.ec2_subnets
   vpc_id        = var.vpc_id
   inbound_cidr  = var.inbound_cidr
-  userdata_file = "${abspath(path.module)}/scripts/userdatas/buildAgent.sh"
+  userdata      = base64encode(var.build_user_data)
 }

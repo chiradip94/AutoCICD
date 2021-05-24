@@ -3,3 +3,5 @@
 *.backup
 *.hcl
 *.zip
+*.tfvars
+*.tfvar

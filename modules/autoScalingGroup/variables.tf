@@ -9,4 +9,4 @@ variable "instance_type"     { default = "t2.micro" }
 variable "min_size"          { default = "1" }
 variable "max_size"          { default = "1" }
 variable "inbound_cidr"      { default = "0.0.0.0/0" }
-variable "userdata_file"     { default = null}
+variable "userdata"          { default = ""}
