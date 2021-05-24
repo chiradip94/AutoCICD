@@ -21,7 +21,8 @@ def findAppType(appName):
     table = dynamodb.Table('productDB')
     response = table.get_item(Key={'AppName': appName })
     appType = response['Item']['AppType']
-    return appType
+    handler = response['Item']['Handler']
+    return appType, handler
 
 def generateTfUrl(appType):
     urlMap = {
@@ -49,7 +50,7 @@ def main(event, context):
     repo_arn = event['Records'][0]['eventSourceARN']
     repo_name = repo_arn.split(':')[-1]
     clone_url = find_codecommit_url(repo_name)
-    appType = findAppType(repo_name)
+    appType, handler = findAppType(repo_name)
     tfScriptUrl = generateTfUrl(appType)
     bucketName = readSsmParameter('/devops/s3/backend/name')
     data = {
@@ -57,7 +58,8 @@ def main(event, context):
         "TfScriptUrl" : tfScriptUrl,
         "AppName" : repo_name,
         "TfBackendBucket" : bucketName,
-        "TfBackendBucketPath" : "deploy/"+repo_name
+        "TfBackendBucketPath" : "deploy/"+repo_name,
+        "Handler" : handler
     }
     writeToSqs(data, appType)
 
