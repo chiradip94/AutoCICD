@@ -22,5 +22,5 @@ module "build_asg" {
   ec2_subnets   = var.ec2_subnets
   vpc_id        = var.vpc_id
   inbound_cidr  = var.inbound_cidr
-  userdata      = base64encode(var.build_user_data)
+  userdata      = base64encode(local.build_user_data)
 }

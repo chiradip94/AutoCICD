@@ -28,6 +28,10 @@ variable "inbound_cidr" {
   default = "0.0.0.0/0"
 }
 
+locals {
+
 build_user_data = templatefile("${path.module}/scripts/userdatas/buildAgent.sh.tpl", {
     bucket_name = var.bucket_name
 })
+
+}
